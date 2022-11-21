@@ -1,6 +1,7 @@
 #include <iostream>
 #include "utils/ArgumentsParser.hpp"
 #include "utils/GraphReader.hpp"
+#include "drawing/GraphDrawing.hpp"
 
 int main(int32_t argc, char *argv[]) {
     const auto kwargs = parser::Parse(argc, argv);
@@ -11,6 +12,8 @@ int main(int32_t argc, char *argv[]) {
     }
     try {
         auto graph = graph_reader::ReadGraph(*kwargs);
+        drawing::GraphDrawing drawing(kwargs->api);
+        drawing.Draw(graph);
     } catch (const std::runtime_error &error) {
         std::cerr << error.what();
         return 1;

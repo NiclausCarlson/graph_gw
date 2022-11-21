@@ -32,6 +32,9 @@ namespace graph_reader {
             graph::Graph result(vertex_count);
             uint32_t i = 1, j = 1;
             while (fin) {
+                if(i > vertex_count){
+                    throw std::runtime_error("Invalid adjacency matrix!");
+                }
                 bool has_edge;
                 fin >> has_edge;
                 if (has_edge) {
@@ -42,9 +45,7 @@ namespace graph_reader {
                     j = 1;
                     ++i;
                 }
-            }
-            if(i > vertex_count){
-                throw std::runtime_error("Invalid adjacency matrix!");
+                fin.peek();
             }
             return result;
         }
