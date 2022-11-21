@@ -30,11 +30,11 @@ namespace parser {
 
     std::optional<kwargs::DrawingKwargs> Parse(int32_t argc, char *argv[]) {
 
-        if (argc != 3) return std::nullopt;
+        if (argc != 4) return std::nullopt;
         auto api = ParseApi(std::string(argv[1]));
         auto graph_type = ParseType(std::string(argv[2]));
 
         if (!api || !graph_type) return std::nullopt;
-        return {{*api, *graph_type}};
+        return {{*api, *graph_type, std::string(argv[3])}};
     }
 }
