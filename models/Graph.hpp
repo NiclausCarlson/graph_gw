@@ -9,7 +9,9 @@ namespace graph {
     public:
         explicit Graph(const uint32_t &vertex_count);
 
-        void AddEdge(const uint32_t& start, const uint32_t& end);
+        void AddEdge(const uint32_t &start, const uint32_t &end);
+
+        uint32_t Size() const noexcept;
 
     private:
         struct Vertex {

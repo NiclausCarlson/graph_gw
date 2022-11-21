@@ -19,9 +19,9 @@ namespace drawing::impl {
     public:
         explicit SDLDrawing(const SDlDrawSettings &draw_settings);
 
-        void DrawCircle() override;
+        void AddCircle(const uint32_t &vertx_id) override;
 
-        void DrawLine() override;
+        void AddLine(uint32_t u, uint32_t v) override;
 
         void Draw() override;
 

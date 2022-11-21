@@ -16,11 +16,11 @@ namespace drawing::impl {
 
     }
 
-    void SDLDrawing::DrawCircle() {
+    void SDLDrawing::AddCircle(const uint32_t &vertx_id) {
 
     }
 
-    void SDLDrawing::DrawLine() {
+    void SDLDrawing::AddLine(uint32_t u, uint32_t v) {
 
     }
 

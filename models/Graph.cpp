@@ -30,4 +30,8 @@ namespace graph {
         vertexes_without_edges.erase(v);
         edges.insert({u, v});
     }
+
+    uint32_t Graph::Size() const noexcept {
+        return vertex_count;
+    }
 }
