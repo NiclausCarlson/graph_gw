@@ -4,6 +4,7 @@ project(graph)
 set(CMAKE_CXX_STANDARD 20)
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+find_package(SDL2 REQUIRED SDL2)
 
 add_executable(graph
         main.cpp
@@ -18,6 +19,6 @@ add_executable(graph
         drawing/sfml/SFMLDrawing.cpp
         drawing/sfml/SFMLDrawing.hpp
         drawing/GraphDrawing.cpp
-        drawing/GraphDrawing.hpp)
+        drawing/GraphDrawing.hpp drawing/sdl/SDLDrawing.cpp drawing/sdl/SDLDrawing.hpp)
 
-target_link_libraries(graph sfml-graphics sfml-audio)
+target_link_libraries(graph sfml-graphics sfml-audio SDL2)

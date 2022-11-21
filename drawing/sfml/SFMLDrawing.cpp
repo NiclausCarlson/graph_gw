@@ -2,11 +2,10 @@
 
 namespace drawing::impl {
 
-
-    SFMLDrawing::SFMLDrawing(uint32_t height, uint32_t width, const std::string &title) : height(height), width(width),
-                                                                                          window(sf::VideoMode(width,
-                                                                                                               height),
-                                                                                                 title) {
+    SFMLDrawing::SFMLDrawing(const SFMLDrawSettings &settings) :
+            window(sf::VideoMode(settings.width,
+                                 settings.height),
+                   settings.title) {
 
     }
 
@@ -22,11 +21,9 @@ namespace drawing::impl {
     void SFMLDrawing::Draw() {
         sf::CircleShape shape(100.f);
         shape.setFillColor(sf::Color::Green);
-        while (window.isOpen())
-        {
+        while (window.isOpen()) {
             sf::Event event{};
-            while (window.pollEvent(event))
-            {
+            while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     window.close();
             }

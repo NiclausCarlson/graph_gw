@@ -6,9 +6,13 @@
 
 
 namespace drawing::impl {
+    struct SFMLDrawSettings : public DrawSettings {
+
+    };
+
     class SFMLDrawing : public AbstractDrawing {
     public:
-        explicit SFMLDrawing(uint32_t height = 800, uint32_t width = 600, const std::string &title = "Graph");
+        explicit SFMLDrawing(const SFMLDrawSettings &settings = SFMLDrawSettings{800, 600, "Graph"});
 
         void DrawCircle() override;
 
@@ -18,8 +22,5 @@ namespace drawing::impl {
 
     private:
         sf::RenderWindow window;
-
-        uint32_t height, width;
-
     };
 }

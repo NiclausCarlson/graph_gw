@@ -9,7 +9,7 @@
 namespace drawing {
     class GraphDrawing {
     public:
-        GraphDrawing(const kwargs::DrawingApi &api);
+        explicit GraphDrawing(const kwargs::DrawingApi &api);
 
         void Draw(const graph::Graph &graph);
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace drawing::impl {
     struct AbstractDrawing {
@@ -11,5 +12,10 @@ namespace drawing::impl {
         virtual void Draw() = 0;
 
         virtual ~AbstractDrawing() = default;
+    };
+
+    struct DrawSettings {
+        uint32_t height, width;
+        std::string title;
     };
 }
