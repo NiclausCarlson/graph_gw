@@ -17,7 +17,7 @@ namespace drawing::impl {
 
     class SDLDrawing : public AbstractDrawing {
     public:
-        explicit SDLDrawing(const SDlDrawSettings &draw_settings = SDlDrawSettings{800, 600, "Graph"});
+        explicit SDLDrawing(const SDlDrawSettings &draw_settings);
 
         void DrawCircle() override;
 

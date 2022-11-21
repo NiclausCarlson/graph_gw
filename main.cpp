@@ -12,8 +12,8 @@ int main(int32_t argc, char *argv[]) {
     }
     try {
         auto graph = graph_reader::ReadGraph(*kwargs);
-        drawing::GraphDrawing drawing(kwargs->api);
-        drawing.Draw(graph);
+        drawing::GraphDrawing drawing(kwargs->api, std::move(graph));
+        drawing.Draw();
     } catch (const std::runtime_error &error) {
         std::cerr << error.what();
         return 1;

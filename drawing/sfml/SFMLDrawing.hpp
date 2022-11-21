@@ -12,7 +12,7 @@ namespace drawing::impl {
 
     class SFMLDrawing : public AbstractDrawing {
     public:
-        explicit SFMLDrawing(const SFMLDrawSettings &settings = SFMLDrawSettings{800, 600, "Graph"});
+        explicit SFMLDrawing(const SFMLDrawSettings &settings);
 
         void DrawCircle() override;
 

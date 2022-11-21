@@ -9,11 +9,12 @@
 namespace drawing {
     class GraphDrawing {
     public:
-        explicit GraphDrawing(const kwargs::DrawingApi &api);
+        GraphDrawing(const kwargs::DrawingApi &api, graph::Graph &&graph);
 
-        void Draw(const graph::Graph &graph);
+        void Draw();
 
     private:
         std::unique_ptr<impl::AbstractDrawing> abstract_drawing;
+        graph::Graph graph;
     };
 }

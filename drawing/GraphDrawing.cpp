@@ -4,14 +4,22 @@
 
 namespace drawing {
 
-    GraphDrawing::GraphDrawing(const kwargs::DrawingApi &api) {
+    GraphDrawing::GraphDrawing(const kwargs::DrawingApi &api, graph::Graph &&graph) : graph(std::move(graph)) {
         if (api == kwargs::SFML) {
-            abstract_drawing = std::make_unique<impl::SFMLDrawing>();
+            abstract_drawing = std::make_unique<impl::SFMLDrawing>(
+                    impl::SFMLDrawSettings{800, 600, "Graph"}
+            );
+        } else if (api == kwargs::SDL) {
+            abstract_drawing = std::make_unique<impl::SDLDrawing>(
+                    impl::SDlDrawSettings{800, 600, "Graph"}
+            );
         }
-        abstract_drawing = std::make_unique<impl::SDLDrawing>();
     }
 
-    void GraphDrawing::Draw(const graph::Graph &graph) {
+    void GraphDrawing::Draw() {
+        if (!abstract_drawing) {
+            throw std::runtime_error("Drawing api not found");
+        }
         abstract_drawing->Draw();
     }
 
