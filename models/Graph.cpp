@@ -34,4 +34,8 @@ namespace graph {
     uint32_t Graph::Size() const noexcept {
         return vertex_count;
     }
+
+    const std::unordered_map<Graph::Vertex, Graph::Vertex, Graph::VertexHasher> &Graph::GetEdges() {
+        return edges;
+    }
 }

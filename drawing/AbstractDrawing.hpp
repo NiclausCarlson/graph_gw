@@ -12,7 +12,6 @@ namespace drawing::impl {
 
     struct VertexDescriptor {
         uint32_t id;
-        float radius;
         float x, y;
     };
 

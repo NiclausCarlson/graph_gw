@@ -6,10 +6,16 @@
 
 namespace graph {
     class Graph {
+    private:
+        struct VertexHasher;
+        struct Vertex;
+
     public:
         explicit Graph(const uint32_t &vertex_count);
 
         void AddEdge(const uint32_t &start, const uint32_t &end);
+
+        const std::unordered_map<Vertex, Vertex, VertexHasher> &GetEdges();
 
         uint32_t Size() const noexcept;
 
