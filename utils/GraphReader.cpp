@@ -15,6 +15,7 @@ namespace graph_reader {
             auto fin = OpenFile(path);
             uint32_t vertex_count;
             fin >> vertex_count;
+            fin.peek();
             graph::Graph result(vertex_count);
             while (fin) {
                 uint32_t u, v;
@@ -29,6 +30,7 @@ namespace graph_reader {
             auto fin = OpenFile(path);
             uint32_t vertex_count;
             fin >> vertex_count;
+            fin.peek();
             graph::Graph result(vertex_count);
             uint32_t i = 1, j = 1;
             while (fin) {

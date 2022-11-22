@@ -29,8 +29,10 @@ namespace drawing::impl {
         std::pair<float, float> NextCoord();
 
         struct PointCtx {
+            PointCtx(float initial_x, float initial_y, double rotation);
+
             float x, y;
-            float dx, dy;
+            double sin_phi, cos_phi;
         };
 
         SFMLDrawSettings settings;

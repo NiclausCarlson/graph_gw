@@ -6,9 +6,8 @@
 namespace drawing {
 
     GraphDrawing::GraphDrawing(const kwargs::DrawingApi &api, graph::Graph &&graph) : graph(std::move(graph)) {
-        uint32_t height = 600;
-        uint32_t width = 800;
-        const float radius = std::sqrt(width * height) / (graph.Size() * 3.0f);
+        const float height = 1024, width = 1280;
+        const float radius = 40.0f;
         if (api == kwargs::SFML) {
             abstract_drawing = std::make_unique<impl::SFMLDrawing>(
                     impl::SFMLDrawSettings{
