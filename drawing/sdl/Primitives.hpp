@@ -5,12 +5,12 @@
 
 namespace drawing::impl::sdl2_primitives {
     struct Point {
-        int32_t x;
-        int32_t y;
+        float x;
+        float y;
     };
 
     struct Circle {
-        Circle(int32_t center_x, int32_t center_y, int32_t radius);
+        Circle(float center_x, float center_y, int32_t radius);
 
         std::vector<Point> points;
         Point center;

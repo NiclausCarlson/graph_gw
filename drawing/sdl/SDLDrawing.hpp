@@ -7,12 +7,15 @@
 
 #include <SDL2/SDL.h>
 
+#include "../vertex_coord_generator/CoordGenerator.hpp"
 #include "../AbstractDrawing.hpp"
 #include "Primitives.hpp"
+
 
 namespace drawing::impl {
 
     struct SDlDrawSettings : public DrawSettings {
+        float radius;
     };
 
     struct SDlVertexDescriptor : public VertexDescriptor {
@@ -46,7 +49,7 @@ namespace drawing::impl {
 
     class SDLDrawing : public AbstractDrawing {
     public:
-        explicit SDLDrawing(const SDlDrawSettings &draw_settings);
+        explicit SDLDrawing(const SDlDrawSettings &settings);
 
         void AddCircle(const uint32_t &vertx_id) override;
 
@@ -58,5 +61,7 @@ namespace drawing::impl {
         SDLDrawingImpl window;
         std::unordered_map<uint32_t, SDlVertexDescriptor> vertexes;
         std::vector<sdl2_primitives::Line> edges;
+        coords::CoordGenerator point_ctx;
+        SDlDrawSettings settings;
     };
 }
