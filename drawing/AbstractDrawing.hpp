@@ -12,7 +12,6 @@ namespace drawing::impl {
 
     struct VertexDescriptor {
         uint32_t id;
-        float x, y;
     };
 
     struct AbstractDrawing {
