@@ -6,13 +6,14 @@
 namespace drawing::impl {
 
     namespace {
-        double GetDistance(const double &u_x, const double &v_x,
-                           const double &u_y, const double &v_y) {
+        double GetDistance(const double &u_x, const double &u_y,
+                           const double &v_x, const double &v_y) {
             return std::sqrt(std::pow(u_x - v_x, 2) + std::pow(u_y - v_y, 2));
         }
 
-        double GetAngle(const double &u_x, const double &v_x, const double &v_y) {
-            return std::atan(v_y / (v_x - u_x)) * 180 / M_PI;
+        double GetAngle(const double &u_x, const double &u_y,
+                        const double &v_x, const double &v_y) {
+            return std::atan2(v_y - u_y, v_x - u_x) * 180 / M_PI;
         }
 
         std::pair<double, double> CalcCenter(const sf::FloatRect &rect) {
@@ -73,14 +74,14 @@ namespace drawing::impl {
             const auto &[v_x, v_y] = CalcCenter(v.vertex.getGlobalBounds());
 
             sf::RectangleShape line(
-            sf::Vector2f(GetDistance(u_x, v_x, u_y, v_y), 10));
+            sf::Vector2f(GetDistance(u_x, u_y, v_x, v_y), 10));
             line.setFillColor(sf::Color::Black);
             if (u_x < v_x) {
                 line.setPosition(u_x, u_y);
-                line.setRotation(GetAngle(u_x, v_x, v_y));
+                line.setRotation(GetAngle(u_x, u_y, v_x, v_y));
             } else {
                 line.setPosition(v_x, v_y);
-                line.setRotation(GetAngle(v_x, u_x, u_y));
+                line.setRotation(GetAngle(v_x, v_y, u_x, u_y));
             }
             lines.push_back(line);
         }
