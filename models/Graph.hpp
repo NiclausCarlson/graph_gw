@@ -1,13 +1,11 @@
 #pragma once
 
 #include <memory>
-#include <unordered_map>
-#include <unordered_set>
+#include <vector>
 
 namespace graph {
     class Graph {
     private:
-        struct VertexHasher;
         struct Vertex;
 
     public:
@@ -15,7 +13,7 @@ namespace graph {
 
         void AddEdge(const uint32_t &start, const uint32_t &end);
 
-        const std::unordered_map<Vertex, Vertex, VertexHasher> &GetEdges();
+        const std::vector<std::pair<Vertex, Vertex>> &GetEdges();
 
         uint32_t Size() const noexcept;
 
@@ -26,12 +24,7 @@ namespace graph {
             bool operator==(const Vertex &other) const;
         };
 
-        struct VertexHasher {
-            std::size_t operator()(const Vertex &k) const;
-        };
-
         uint32_t vertex_count;
-        std::unordered_map<Vertex, Vertex, VertexHasher> edges;
-        std::unordered_set<Vertex, VertexHasher> vertexes_without_edges;
+        std::vector<std::pair<Vertex, Vertex>> edges;
     };
 }

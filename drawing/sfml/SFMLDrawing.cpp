@@ -74,7 +74,7 @@ namespace drawing::impl {
             const auto &[v_x, v_y] = CalcCenter(v.vertex.getGlobalBounds());
 
             sf::RectangleShape line(
-            sf::Vector2f(GetDistance(u_x, u_y, v_x, v_y), 10));
+            sf::Vector2f(GetDistance(u_x, u_y, v_x, v_y), 8));
             line.setFillColor(sf::Color::Black);
             if (u_x < v_x) {
                 line.setPosition(u_x, u_y);
@@ -120,6 +120,5 @@ namespace drawing::impl {
 
         return {res_x, res_y};
     }
-
 
 }
