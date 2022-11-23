@@ -70,17 +70,38 @@ namespace drawing::impl {
             SDL_RenderClear(renderer.get());
             SDL_SetRenderDrawColor(renderer.get(), 0x00, 0x00, 0x00, 0x00);
 
+            for (const auto &it: edges) {
+                auto res = SDL_RenderDrawLine(renderer.get(), it.a.x, it.a.y,
+                                              it.b.x, it.b.y);
+                if (res != 0) {
+                    throw std::runtime_error("Can't render edge");
+                }
+            }
+
             for (const auto &it: vertexes) {
-                for (const auto &point: it.second.vertex.points) {
+                const auto &v = it.second.vertex.points;
+                SDL_SetRenderDrawColor(renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
+                auto begin = v.begin();
+                auto mid = begin + v.size() / 2;
+                auto end = v.end() - 1;
+                for (; begin != mid; ++begin) {
+                    auto res = SDL_RenderDrawLine(renderer.get(),
+                                                  begin->x, begin->y - 1,
+                                                  end->x, end->y);
+                    if (res != 0) {
+                        throw std::runtime_error("Can't render circle");
+                    }
+                    --end;
+                }
+
+                SDL_SetRenderDrawColor(renderer.get(), 0x00, 0x00, 0x00, 0x00);
+                for (const auto &point: v) {
                     auto [x, y] = point;
                     auto res = SDL_RenderDrawPoint(renderer.get(), x, y);
                     if (res != 0) {
                         throw std::runtime_error("Can't render circle");
                     }
                 }
-            }
-
-            for (const auto &it: edges) {
 
             }
 
@@ -97,7 +118,10 @@ namespace drawing::impl {
     }
 
     void SDLDrawing::AddLine(uint32_t u, uint32_t v) {
-
+        const auto &vert_u = vertexes.at(u).vertex.center;
+        const auto &vert_v = vertexes.at(v).vertex.center;
+        edges.push_back({{vert_u.x, vert_u.y},
+                         {vert_v.x, vert_v.y}});
     }
 
     void SDLDrawing::Draw() {
