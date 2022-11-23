@@ -19,6 +19,6 @@ add_executable(graph
         drawing/sfml/SFMLDrawing.cpp
         drawing/sfml/SFMLDrawing.hpp
         drawing/GraphDrawing.cpp
-        drawing/GraphDrawing.hpp drawing/sdl/SDLDrawing.cpp drawing/sdl/SDLDrawing.hpp drawing/sdl/Primitives.cpp drawing/sdl/Primitives.hpp)
+        drawing/GraphDrawing.hpp drawing/sdl/SDLDrawing.cpp drawing/sdl/SDLDrawing.hpp drawing/sdl/Primitives.cpp drawing/sdl/Primitives.hpp drawing/vertex_coord_generator/CoordGenerator.cpp drawing/vertex_coord_generator/CoordGenerator.hpp)
 
 target_link_libraries(graph sfml-graphics sfml-audio SDL2)

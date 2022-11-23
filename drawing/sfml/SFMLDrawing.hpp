@@ -5,6 +5,9 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
+#include "../vertex_coord_generator/CoordGenerator.hpp"
+
+
 namespace drawing::impl {
     struct SFMLDrawSettings : public DrawSettings {
         float vertex_radius;
@@ -31,20 +34,11 @@ namespace drawing::impl {
         void Draw() override;
 
     private:
-        std::pair<float, float> NextCoord();
-
-        struct PointCtx {
-            PointCtx(float initial_x, float initial_y, double rotation);
-
-            float x, y;
-            double sin_phi, cos_phi;
-        };
-
         SFMLDrawSettings settings;
         sf::RenderWindow window;
         std::unordered_map<uint32_t, SFMLVertexDescriptor> vertexes;
         std::vector<std::pair<uint32_t, uint32_t>> edges;
-        PointCtx point_ctx;
+        coords::CoordGenerator point_ctx;
         sf::Font font;
     };
 }

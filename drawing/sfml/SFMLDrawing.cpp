@@ -24,9 +24,10 @@ namespace drawing::impl {
 
     SFMLDrawing::SFMLDrawing(const SFMLDrawSettings &settings) :
             settings(settings),
-            point_ctx(settings.width - 6 * settings.vertex_radius,
-                      settings.height / 2,
-                      -2 * M_PI / settings.vertex_count
+            point_ctx(settings.width,
+                      settings.height,
+                      -2 * M_PI / settings.vertex_count,
+                      settings.vertex_radius
             ),
             window(sf::VideoMode(settings.width, settings.height),
                    settings.title) {
@@ -35,12 +36,9 @@ namespace drawing::impl {
         }
     }
 
-    SFMLDrawing::PointCtx::PointCtx(float initial_x, float initial_y, double rotation) :
-            x(initial_x), y(initial_y), sin_phi(std::sin(rotation)), cos_phi(std::cos(rotation)) {
-    }
 
     void SFMLDrawing::AddCircle(const uint32_t &vertex_id) {
-        auto [x, y] = NextCoord();
+        auto [x, y] = point_ctx.GetCoords();
 
         sf::CircleShape shape(settings.vertex_radius);
         shape.setPosition(x, y);
@@ -106,19 +104,6 @@ namespace drawing::impl {
             window.display();
         }
 
-    }
-
-    std::pair<float, float> SFMLDrawing::NextCoord() {
-        static const double shift_x = settings.width / 2;
-        static const double shift_y = settings.height / 2 - 2.4 * settings.vertex_radius;
-
-        const float res_x = point_ctx.x, res_y = point_ctx.y;
-        const float new_s_x = point_ctx.x - shift_x;
-        const float new_s_y = point_ctx.y - shift_y;
-        point_ctx.x = new_s_x * point_ctx.cos_phi - new_s_y * point_ctx.sin_phi + shift_x;
-        point_ctx.y = new_s_x * point_ctx.sin_phi + new_s_y * point_ctx.cos_phi + shift_y;
-
-        return {res_x, res_y};
     }
 
 }
