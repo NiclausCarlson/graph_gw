@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "../vertex_coord_generator/CoordGenerator.hpp"
 #include "../AbstractDrawing.hpp"
@@ -34,6 +35,8 @@ namespace drawing::impl {
 
         void OnEvent(const SDL_Event &event);
 
+        SDL_Texture *RenderText(const std::string &message, SDL_Color color, int fontSize);
+
         struct SDLWindowDestroyer {
             void operator()(SDL_Window *w) const;
         };
@@ -42,8 +45,18 @@ namespace drawing::impl {
             void operator()(SDL_Renderer *w) const;
         };
 
+        struct TTFFontDestroyer {
+            void operator()(TTF_Font *w) const;
+        };
+
+        struct SDLTextureDestroyer {
+            void operator()(SDL_Texture *w) const;
+        };
+
+
         std::unique_ptr<SDL_Window, SDLWindowDestroyer> window;
         std::unique_ptr<SDL_Renderer, SDLRendererDestroyer> renderer;
+        std::unique_ptr<TTF_Font, TTFFontDestroyer> font;
         bool is_running;
     };
 

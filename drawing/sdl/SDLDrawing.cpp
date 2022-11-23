@@ -19,6 +19,14 @@ namespace drawing::impl {
         SDL_DestroyRenderer(w);
     }
 
+    void SDLDrawingImpl::TTFFontDestroyer::operator()(TTF_Font *w) const {
+        TTF_CloseFont(w);
+    }
+
+    void SDLDrawingImpl::SDLTextureDestroyer::operator()(SDL_Texture *w) const {
+        SDL_DestroyTexture(w);
+    }
+
     SDLDrawingImpl::SDLDrawingImpl(const SDlDrawSettings &draw_settings) : is_running(true) {
         OnInit(draw_settings);
     }
@@ -46,6 +54,8 @@ namespace drawing::impl {
         if (!renderer) {
             throw std::runtime_error("Can't initialize rendered");
         }
+        font.reset(TTF_OpenFont("fonts/Times New Roman.ttf", 24));
+        if (!font) throw std::runtime_error("Can't read font");
     }
 
     void SDLDrawingImpl::OnEvent(const SDL_Event &event) {
@@ -57,7 +67,6 @@ namespace drawing::impl {
     int SDLDrawingImpl::Execute(const std::unordered_map<uint32_t, SDlVertexDescriptor> &vertexes,
                                 const std::vector<sdl2_primitives::Line> &edges) {
         SDL_Event event;
-
 
         while (is_running) {
             while (SDL_PollEvent(&event)) {
@@ -102,12 +111,34 @@ namespace drawing::impl {
                         throw std::runtime_error("Can't render circle");
                     }
                 }
-
+                std::unique_ptr<SDL_Texture, SDLTextureDestroyer> text;
+                text.reset(RenderText(std::to_string(it.second.id),
+                                      SDL_Color{0x00, 0x00, 0x00, 0x00},
+                                      24));
+                const auto &[x, y] = it.second.vertex.center;
+                const auto rect = SDL_Rect{(int) x, (int) y, 20, 20};
+                SDL_RenderCopy(renderer.get(), text.get(), nullptr, &rect);
             }
 
             SDL_RenderPresent(renderer.get());
         }
         return 0;
+    }
+
+    SDL_Texture *
+    SDLDrawingImpl::RenderText(const std::string &message, SDL_Color color, int fontSize) {
+
+        SDL_Surface *surf = TTF_RenderText_Blended(font.get(), message.c_str(), color);
+        if (surf == nullptr) {
+            return nullptr;
+        }
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer.get(), surf);
+        if (texture == nullptr) {
+            throw std::runtime_error("Can't create text texture");
+        }
+
+        SDL_FreeSurface(surf);
+        return texture;
     }
 
 
