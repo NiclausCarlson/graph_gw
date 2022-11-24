@@ -6,5 +6,5 @@ namespace drawing::impl::config {
 
     constexpr const uint32_t kHeight = 1024;
     constexpr const uint32_t kWidth = 1280;
-    constexpr const uint32_t kVertexRadius = 40;
+    constexpr const int32_t kVertexRadius = 40;
 }

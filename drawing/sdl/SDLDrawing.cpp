@@ -76,15 +76,18 @@ namespace drawing::impl {
             while (SDL_PollEvent(&event)) {
                 OnEvent(event);
             }
+
             if (!window) return 1;
             if (!renderer) return 1;
             if (!font) return 1;
+
             SetColor(font_color);
             SDL_RenderClear(renderer.get());
             SetColor(edge_color);
 
             for (const auto &it: edges) {
-                auto res = SDL_RenderDrawLine(renderer.get(), it.a.x, it.a.y,
+                auto res = SDL_RenderDrawLine(renderer.get(),
+                                              it.a.x, it.a.y,
                                               it.b.x, it.b.y);
                 if (res != 0) {
                     throw std::runtime_error("Can't render edge");
@@ -118,8 +121,12 @@ namespace drawing::impl {
                 std::unique_ptr<SDL_Texture, SDLTextureDestroyer> text;
                 text.reset(RenderText(std::to_string(it.second.id),
                                       SDL_Color{0x00, 0x00, 0x00, 0x00}));
-                const auto &[x, y] = it.second.vertex.center;
-                const auto rect = SDL_Rect{(int) x, (int) y, 20, 20};
+                const auto &[x, y] = it.second.vertex.start_point;
+                const auto rect = SDL_Rect{x - config::kVertexRadius / 3,
+                                           y + config::kVertexRadius / 2,
+                                           20,
+                                           20
+                };
                 SDL_RenderCopy(renderer.get(), text.get(), nullptr, &rect);
             }
 
@@ -159,14 +166,14 @@ namespace drawing::impl {
     void SDLDrawing::AddCircle(const uint32_t &vertx_id) {
         auto [x, y] = point_ctx.GetCoords();
         vertexes.insert({vertx_id, {vertx_id,
-                                    sdl2_primitives::Circle(x, y, config::kVertexRadius)}});
+                                    sdl2_primitives::Circle(x, y)}});
     }
 
     void SDLDrawing::AddLine(uint32_t u, uint32_t v) {
-        const auto &vert_u = vertexes.at(u).vertex.center;
-        const auto &vert_v = vertexes.at(v).vertex.center;
-        edges.push_back({{vert_u.x, vert_u.y},
-                         {vert_v.x, vert_v.y}});
+        const auto &vert_u = vertexes.at(u).vertex.start_point;
+        const auto &vert_v = vertexes.at(v).vertex.start_point;
+        edges.push_back({{vert_u.x, vert_u.y + config::kVertexRadius},
+                         {vert_v.x, vert_v.y + config::kVertexRadius}});
     }
 
     void SDLDrawing::Draw() {
