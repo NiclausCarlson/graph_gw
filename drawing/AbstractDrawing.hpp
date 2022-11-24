@@ -5,7 +5,6 @@
 
 namespace drawing::impl {
     struct DrawSettings {
-        float height, width;
         std::string title;
         uint32_t vertex_count;
     };

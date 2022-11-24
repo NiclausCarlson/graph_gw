@@ -28,6 +28,6 @@ add_executable(graph
         drawing/sdl/Primitives.cpp
         drawing/sdl/Primitives.hpp
         drawing/vertex_coord_generator/CoordGenerator.cpp
-        drawing/vertex_coord_generator/CoordGenerator.hpp)
+        drawing/vertex_coord_generator/CoordGenerator.hpp drawing/Config.hpp)
 
 target_link_libraries(graph sfml-graphics sfml-audio SDL2 ${SDL2TTF_LIBRARIES})

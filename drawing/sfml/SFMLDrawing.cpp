@@ -1,7 +1,8 @@
-#define _USE_MATH_DEFINES
-
 #include "SFMLDrawing.hpp"
+
 #include <cmath>
+
+#include "../Config.hpp"
 
 namespace drawing::impl {
 
@@ -24,14 +25,10 @@ namespace drawing::impl {
 
     SFMLDrawing::SFMLDrawing(const SFMLDrawSettings &settings) :
             settings(settings),
-            point_ctx(settings.width,
-                      settings.height,
-                      -2 * M_PI / settings.vertex_count,
-                      settings.vertex_radius
-            ),
-            window(sf::VideoMode(settings.width, settings.height),
+            point_ctx(-2 * M_PI / settings.vertex_count),
+            window(sf::VideoMode(config::kWidth, config::kHeight),
                    settings.title) {
-        if (!font.loadFromFile("fonts/Times New Roman.ttf")) {
+        if (!font.loadFromFile(config::kFontPath)) {
             throw std::runtime_error("Can't find font for text");
         }
     }
@@ -40,7 +37,7 @@ namespace drawing::impl {
     void SFMLDrawing::AddCircle(const uint32_t &vertex_id) {
         auto [x, y] = point_ctx.GetCoords();
 
-        sf::CircleShape shape(settings.vertex_radius);
+        sf::CircleShape shape(config::kVertexRadius);
         shape.setPosition(x, y);
         shape.setFillColor(settings.vertex_color);
         shape.setOutlineThickness(settings.border_width);
@@ -49,11 +46,11 @@ namespace drawing::impl {
         sf::Text text;
         text.setFont(font);
         text.setString(std::to_string(vertex_id));
-        text.setCharacterSize(settings.char_size);
+        text.setCharacterSize(config::kTextSize);
         text.setFillColor(settings.text_color);
         const auto &[center_x, center_y] = CalcCenter(shape.getGlobalBounds());
-        text.setPosition(center_x - settings.char_size / 2,
-                         center_y - settings.char_size / 2);
+        text.setPosition(center_x - config::kTextSize / 2,
+                         center_y - config::kTextSize / 2);
         vertexes.insert({vertex_id, {vertex_id, shape, text}});
 
     }

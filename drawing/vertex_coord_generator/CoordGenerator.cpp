@@ -1,24 +1,23 @@
 #include "CoordGenerator.hpp"
+
 #include <cmath>
 
+#include "../Config.hpp"
 
 namespace coords {
+    namespace config = drawing::impl::config;
 
-    CoordGenerator::CoordGenerator(uint32_t width, uint32_t height,
-                                   double rotation, uint32_t radius) :
-            x(width - 6 * radius),
-            y(height / 2),
+    CoordGenerator::CoordGenerator(double rotation) :
+            x(config::kWidth - 6 * config::kVertexRadius),
+            y(config::kHeight / 2),
             sin_phi(std::sin(rotation)),
-            cos_phi(std::cos(rotation)),
-            width(width),
-            height(height),
-            radius(radius) {
+            cos_phi(std::cos(rotation)) {
 
     }
 
     std::pair<float, float> CoordGenerator::GetCoords() {
-        static const double shift_x = width / 2;
-        static const double shift_y = height / 2 - 2.4 * radius;
+        static const double shift_x = config::kWidth / 2;
+        static const double shift_y = config::kHeight / 2 - 2.4 * config::kVertexRadius;
 
         const float res_x = x, res_y = y;
         const float new_s_x = x - shift_x;

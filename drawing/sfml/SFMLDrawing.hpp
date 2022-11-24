@@ -10,11 +10,9 @@
 
 namespace drawing::impl {
     struct SFMLDrawSettings : public DrawSettings {
-        float vertex_radius;
         sf::Color vertex_color;
         sf::Color outline_color;
         uint32_t border_width;
-        uint32_t char_size;
         sf::Color text_color;
     };
 

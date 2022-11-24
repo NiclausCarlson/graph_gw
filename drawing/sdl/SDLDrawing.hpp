@@ -15,8 +15,15 @@
 
 namespace drawing::impl {
 
+    enum Color {
+        kBlack,
+        kWhite
+    };
+
     struct SDlDrawSettings : public DrawSettings {
-        float radius;
+        Color vertex_color;
+        Color edge_color;
+        Color font_color;
     };
 
     struct SDlVertexDescriptor : public VertexDescriptor {
@@ -35,7 +42,9 @@ namespace drawing::impl {
 
         void OnEvent(const SDL_Event &event);
 
-        SDL_Texture *RenderText(const std::string &message, SDL_Color color, int fontSize);
+        SDL_Texture *RenderText(const std::string &message, SDL_Color color);
+
+        void SetColor(Color color);
 
         struct SDLWindowDestroyer {
             void operator()(SDL_Window *w) const;
@@ -53,11 +62,14 @@ namespace drawing::impl {
             void operator()(SDL_Texture *w) const;
         };
 
-
         std::unique_ptr<SDL_Window, SDLWindowDestroyer> window;
         std::unique_ptr<SDL_Renderer, SDLRendererDestroyer> renderer;
         std::unique_ptr<TTF_Font, TTFFontDestroyer> font;
         bool is_running;
+
+        Color vertex_color;
+        Color edge_color;
+        Color font_color;
     };
 
     class SDLDrawing : public AbstractDrawing {

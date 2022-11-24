@@ -1,14 +1,12 @@
 #include "SDLDrawing.hpp"
 
+#include "../Config.hpp"
 
 namespace drawing::impl {
 
     SDLDrawing::SDLDrawing(const SDlDrawSettings &settings) :
             window(settings),
-            point_ctx(settings.width,
-                      settings.height,
-                      -2 * M_PI / settings.vertex_count,
-                      settings.radius),
+            point_ctx(-2 * M_PI / settings.vertex_count),
             settings(settings) {}
 
     void SDLDrawingImpl::SDLWindowDestroyer::operator()(SDL_Window *w) const {
@@ -27,13 +25,16 @@ namespace drawing::impl {
         SDL_DestroyTexture(w);
     }
 
-    SDLDrawingImpl::SDLDrawingImpl(const SDlDrawSettings &draw_settings) : is_running(true) {
+    SDLDrawingImpl::SDLDrawingImpl(const SDlDrawSettings &draw_settings) : is_running(true),
+                                                                           vertex_color(draw_settings.vertex_color),
+                                                                           edge_color(draw_settings.edge_color),
+                                                                           font_color(draw_settings.font_color) {
         OnInit(draw_settings);
     }
 
     void SDLDrawingImpl::OnInit(const SDlDrawSettings &draw_settings) {
         TTF_Init();
-        font.reset(TTF_OpenFont("fonts/Times New Roman.ttf", 30));
+        font.reset(TTF_OpenFont(config::kFontPath.c_str(), config::kTextSize));
         if (!font) {
             throw std::runtime_error(TTF_GetError());
         }
@@ -45,7 +46,7 @@ namespace drawing::impl {
         window.reset(SDL_CreateWindow(draw_settings.title.c_str(),
                                       SDL_WINDOWPOS_CENTERED,
                                       SDL_WINDOWPOS_CENTERED,
-                                      draw_settings.width, draw_settings.height,
+                                      config::kWidth, config::kHeight,
                                       SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE));
 
         if (!window) {
@@ -78,10 +79,9 @@ namespace drawing::impl {
             if (!window) return 1;
             if (!renderer) return 1;
             if (!font) return 1;
-
-            SDL_SetRenderDrawColor(renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
+            SetColor(font_color);
             SDL_RenderClear(renderer.get());
-            SDL_SetRenderDrawColor(renderer.get(), 0x00, 0x00, 0x00, 0x00);
+            SetColor(edge_color);
 
             for (const auto &it: edges) {
                 auto res = SDL_RenderDrawLine(renderer.get(), it.a.x, it.a.y,
@@ -93,7 +93,7 @@ namespace drawing::impl {
 
             for (const auto &it: vertexes) {
                 const auto &v = it.second.vertex.points;
-                SDL_SetRenderDrawColor(renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
+                SetColor(font_color);
                 auto begin = v.begin();
                 auto mid = begin + v.size() / 2;
                 auto end = v.end() - 1;
@@ -107,7 +107,7 @@ namespace drawing::impl {
                     --end;
                 }
 
-                SDL_SetRenderDrawColor(renderer.get(), 0x00, 0x00, 0x00, 0x00);
+                SetColor(vertex_color);
                 for (const auto &point: v) {
                     auto [x, y] = point;
                     auto res = SDL_RenderDrawPoint(renderer.get(), x, y);
@@ -117,8 +117,7 @@ namespace drawing::impl {
                 }
                 std::unique_ptr<SDL_Texture, SDLTextureDestroyer> text;
                 text.reset(RenderText(std::to_string(it.second.id),
-                                      SDL_Color{0x00, 0x00, 0x00, 0x00},
-                                      24));
+                                      SDL_Color{0x00, 0x00, 0x00, 0x00}));
                 const auto &[x, y] = it.second.vertex.center;
                 const auto rect = SDL_Rect{(int) x, (int) y, 20, 20};
                 SDL_RenderCopy(renderer.get(), text.get(), nullptr, &rect);
@@ -130,7 +129,7 @@ namespace drawing::impl {
     }
 
     SDL_Texture *
-    SDLDrawingImpl::RenderText(const std::string &message, SDL_Color color, int fontSize) {
+    SDLDrawingImpl::RenderText(const std::string &message, SDL_Color color) {
 
         SDL_Surface *surf = TTF_RenderText_Blended(font.get(), message.c_str(), color);
         if (surf == nullptr) {
@@ -145,11 +144,22 @@ namespace drawing::impl {
         return texture;
     }
 
+    void SDLDrawingImpl::SetColor(Color color) {
+        switch (color) {
+            case kBlack:
+                SDL_SetRenderDrawColor(renderer.get(), 0x00, 0x00, 0x00, 0x00);
+                break;
+            case kWhite:
+                SDL_SetRenderDrawColor(renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
+                break;
+        }
+    }
+
 
     void SDLDrawing::AddCircle(const uint32_t &vertx_id) {
         auto [x, y] = point_ctx.GetCoords();
         vertexes.insert({vertx_id, {vertx_id,
-                                    sdl2_primitives::Circle(x, y, settings.radius)}});
+                                    sdl2_primitives::Circle(x, y, config::kVertexRadius)}});
     }
 
     void SDLDrawing::AddLine(uint32_t u, uint32_t v) {
