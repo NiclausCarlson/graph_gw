@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 find_package(SDL2 REQUIRED SDL2)
+INCLUDE(FindPkgConfig)
+PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
+
 
 add_executable(graph
         main.cpp
@@ -27,4 +30,4 @@ add_executable(graph
         drawing/vertex_coord_generator/CoordGenerator.cpp
         drawing/vertex_coord_generator/CoordGenerator.hpp)
 
-target_link_libraries(graph sfml-graphics sfml-audio SDL2)
+target_link_libraries(graph sfml-graphics sfml-audio SDL2 ${SDL2TTF_LIBRARIES})

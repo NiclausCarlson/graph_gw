@@ -32,6 +32,11 @@ namespace drawing::impl {
     }
 
     void SDLDrawingImpl::OnInit(const SDlDrawSettings &draw_settings) {
+        TTF_Init();
+        font.reset(TTF_OpenFont("fonts/Times New Roman.ttf", 30));
+        if (!font) {
+            throw std::runtime_error(TTF_GetError());
+        }
 
         if (SDL_Init(SDL_INIT_VIDEO) != 0) {
             throw std::runtime_error(std::string("Can't init SDL: ") + SDL_GetError());
@@ -44,7 +49,7 @@ namespace drawing::impl {
                                       SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE));
 
         if (!window) {
-            throw std::runtime_error("Can't initialize window");
+            throw std::runtime_error(std::string("Can't initialize window: ") + SDL_GetError());
         }
 
         renderer.reset(SDL_CreateRenderer(window.get(),
@@ -54,8 +59,6 @@ namespace drawing::impl {
         if (!renderer) {
             throw std::runtime_error("Can't initialize rendered");
         }
-        font.reset(TTF_OpenFont("fonts/Times New Roman.ttf", 24));
-        if (!font) throw std::runtime_error("Can't read font");
     }
 
     void SDLDrawingImpl::OnEvent(const SDL_Event &event) {
@@ -74,6 +77,7 @@ namespace drawing::impl {
             }
             if (!window) return 1;
             if (!renderer) return 1;
+            if (!font) return 1;
 
             SDL_SetRenderDrawColor(renderer.get(), 0xFF, 0xFF, 0xFF, 0xFF);
             SDL_RenderClear(renderer.get());
